@@ -2,7 +2,7 @@
 
 use Psr\Container\ContainerInterface;
 
-class UsuarioMapper{
+class PerfilMapper{
 	private $container;
 	public function __construct(ContainerInterface $containerInterface){
 		$this->container = $containerInterface;

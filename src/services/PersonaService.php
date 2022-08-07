@@ -25,6 +25,34 @@ $container->set('container/persona/inicializar', function(ContainerInterface $co
 	}
 });
 
+$container->set('container/persona/consultar', function(ContainerInterface $containerInterface){
+	$solicitud = json_decode(file_get_contents('php://input'), true);
+	$response['status'] = 1;
+	$response['text'] = 'OK';
+	try{
+		$persona = new PersonaMapper($containerInterface);
+		$data['persona'] = $persona->consultar($solicitud);
+		$response['data'] = $data;
+		return $response;
+	}catch(Exception $ex){
+		return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
+	}
+});
+
+$container->set('container/persona/buscarPorDocumento', function(ContainerInterface $containerInterface){
+	$solicitud = json_decode(file_get_contents('php://input'), true);
+	$response['status'] = 1;
+	$response['text'] = 'OK';
+	try{
+		$persona = new PersonaMapper($containerInterface);
+		$data['persona'] = $persona->buscarPorDocumento($solicitud);
+		$response['data'] = $data;
+		return $response;
+	}catch(Exception $ex){
+		return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
+	}
+});
+
 $container->set('container/persona/listar', function(ContainerInterface $containerInterface){
 	$solicitud = json_decode(file_get_contents('php://input'), true);
 	$response['status'] = 1;

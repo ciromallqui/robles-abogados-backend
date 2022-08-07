@@ -17,6 +17,26 @@ class PersonaController extends BaseController{
 		}
 	}
 
+	public function consultar(Request $request, Response $response, $args){
+		try{
+			$config = $this->container->get('container/persona/consultar');
+			$response->getBody()->write(json_encode($config));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+		}catch(Exception $ex){
+			echo $ex.getMessage();
+		}
+	}
+
+	public function buscarPorDocumento(Request $request, Response $response, $args){
+		try{
+			$config = $this->container->get('container/persona/buscarPorDocumento');
+			$response->getBody()->write(json_encode($config));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+		}catch(Exception $ex){
+			echo $ex.getMessage();
+		}
+	}
+
 	public function listar(Request $request, Response $response, $args){
 		try{
 			$config = $this->container->get('container/persona/listar');

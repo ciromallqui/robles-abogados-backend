@@ -1,10 +1,10 @@
 <?php
 
 $container->set('db_connect', function(){
-	$DB_HOST = 'localhost';
+	$DB_HOST = $_ENV['DB_HOST'];
 	$DB_USER = $_ENV['DB_USER'];
-	$DB_PASSWORD = '';
-	$DB_NAME = 'robles-abogados';
+	$DB_PASSWORD = $_ENV['DB_PASSWORD'];
+	$DB_NAME = $_ENV['DB_NAME'];
 
 	$opt = [
 		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

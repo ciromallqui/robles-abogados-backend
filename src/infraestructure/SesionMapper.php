@@ -8,11 +8,11 @@ class SesionMapper{
 		$this->container = $containerInterface;
 	}
 
-	public function login($solicitud){
+	public function login($solicitud) {
 		$usuario = $solicitud['usuario'];
 		$clave = $solicitud['clave'];
-		$sql = "SELECT * FROM T_USUARIO WHERE codigo_usuario = '$usuario' AND clave = '$clave'";
 		try{
+			$sql = "SELECT * FROM T_USUARIO WHERE codigo_usuario = '$usuario' AND clave = '$clave'";
 			$config = $this->container->get('db_connect');
 			$response = $config->query($sql);
 			$config = null;

@@ -27,7 +27,9 @@ $container->set('container/sesion/iniciar', function(ContainerInterface $contain
 			$response['data'] = $usuario;
 			return $response;
 		}else{
-			return json_decode('{"text": "No se encontró al usuario con los credenciales ingresados.", "status": 0}');
+			$response['status'] = 0;
+			$response['text'] = "No se encontró al usuario con los credenciales ingresados";
+			return $response;
 		}
 	}catch(Exception $ex){
 		return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');

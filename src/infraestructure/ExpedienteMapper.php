@@ -2,16 +2,16 @@
 
 use Psr\Container\ContainerInterface;
 
-class PersonaMapper{
+class ExpedienteMapper{
 	private $container;
 	public function __construct(ContainerInterface $containerInterface){
 		$this->container = $containerInterface;
 	}
 
 	public function listar($solicitud){
-		$nroDocumento = $solicitud['nroDocumento'];
-		$nombre = $solicitud['nombre'];
-		$sql = "SELECT id_persona idPersona, (select descripcion from T_PARAMETRO where grupo = 'TIPO_DOCUMENTO' and codigo = P.cod_tipo_documento) tipoDocumento, nro_documento nroDocumento, nombre, apellido, correo, nro_celular nroCelular FROM T_PERSONA P WHERE nro_documento LIKE '%$nroDocumento%' AND (nombre LIKE '%$nombre%' OR apellido LIKE '%$nombre%')";
+		$idArea = $solicitud['idArea'];
+		$nroExpediente = $solicitud['nroExpediente'];
+		$sql = "SELECT e.id_expediente idExpediente, e.numero nroExpediente, e.titulo, e.id_usuario idUsuario, a.id_area idArea, a.descripcion area, p.nro_documento nroDocumento, concat(p.nombre,' ',p.apellido) nombreCompleto FROM T_EXPEDIENTE e INNER JOIN T_EXPEDIENTE_AREA ea ON ea.id_expediente = e.id_expediente INNER JOIN T_AREA a ON a.id_area = ea.id_area INNER JOIN T_USUARIO u ON u.id_usuario = e.id_usuario INNER JOIN T_PERSONA p ON p.id_persona = u.id_persona WHERE ea.id_area = '$idArea' AND e.numero LIKE '%$nroExpediente%'";
 		try{
 			$config = $this->container->get('db_connect');
 			$response = $config->query($sql);
@@ -26,21 +26,9 @@ class PersonaMapper{
 	}
 
 	public function consultar($solicitud){
-		$idPersona = $solicitud['idPersona'];
-		$sql = "SELECT id_persona idPersona, cod_tipo_documento codTipoDocumento, nro_documento nroDocumento, nombre, apellido, correo, nro_celular nroCelular FROM T_PERSONA WHERE id_persona = '$idPersona'";
-		try{
-			$config = $this->container->get('db_connect');
-			$response = $config->query($sql);
-			$config = null;
-			return $response->fetch();
-		}catch(PDOException $ex){
-			return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
-		}
-	}
-
-	public function buscarPorDocumento($solicitud){
-		$nroDocumento = $solicitud['nroDocumento'];
-		$sql = "SELECT p.id_persona idPersona, p.cod_tipo_documento codTipoDocumento, p.nro_documento nroDocumento, p.nombre, p.apellido, p.correo, p.nro_celular nroCelular, u.id_usuario idUsuario, u.codigo_usuario codUsuario FROM T_PERSONA p INNER JOIN T_USUARIO u ON u.id_persona = p.id_persona WHERE nro_documento = '$nroDocumento'";
+		$idArea = $solicitud['idArea'];
+		$idExpediente = $solicitud['idExpediente'];
+		$sql = "SELECT e.id_expediente idExpediente, e.numero nroExpediente, e.titulo, e.id_usuario idUsuario, a.id_area idArea, a.descripcion area, p.nro_documento nroDocumento, p.nombre, p.apellido FROM T_EXPEDIENTE e INNER JOIN T_EXPEDIENTE_AREA ea ON ea.id_expediente = e.id_expediente INNER JOIN T_AREA a ON a.id_area = ea.id_area INNER JOIN T_USUARIO u ON u.id_usuario = e.id_usuario INNER JOIN T_PERSONA p ON p.id_persona = u.id_persona WHERE ea.id_area = '$idArea' AND ea.id_expediente = '$idExpediente'";
 		try{
 			$config = $this->container->get('db_connect');
 			$response = $config->query($sql);
@@ -52,22 +40,33 @@ class PersonaMapper{
 	}
 
 	public function agregar($solicitud){
-		$codTipoDocumento = $solicitud['codTipoDocumento'];
-		$nroDocumento = $solicitud['nroDocumento'];
-		$nombre = $solicitud['nombre'];
-		$apellido = $solicitud['apellido'];
-		$correo = $solicitud['correo'];
-		$nroCelular = $solicitud['nroCelular'];
-		$sql = "INSERT INTO T_PERSONA (cod_tipo_documento, nro_documento, nombre, apellido, correo, nro_celular) VALUES(:codTipoDocumento, :nroDocumento, :nombre, :apellido, :correo, :nroCelular)";
+		$nroExpediente = $solicitud['nroExpediente'];
+		$titulo = $solicitud['titulo'];
+		$idUsuario = $solicitud['idUsuario'];
+		$sql = "INSERT INTO T_EXPEDIENTE (numero, titulo, id_usuario) VALUES(:nroExpediente, :titulo, :idUsuario)";
 		try{
 			$config = $this->container->get('db_connect');
 			$response = $config->prepare($sql);
-			$response->bindParam(':codTipoDocumento', $codTipoDocumento);
-			$response->bindParam(':nroDocumento', $nroDocumento);
-			$response->bindParam(':nombre', $nombre);
-			$response->bindParam(':apellido', $apellido);
-			$response->bindParam(':correo', $correo);
-			$response->bindParam(':nroCelular', $nroCelular);
+			$response->bindParam(':nroExpediente', $nroExpediente);
+			$response->bindParam(':titulo', $titulo);
+			$response->bindParam(':idUsuario', $idUsuario);
+			$response->execute();
+			$response = null;
+			return $config->lastInsertId();
+		}catch(PDOException $ex){
+			echo '{"text": '.$ex->getMessage().', "status": 0}';
+		}
+	}
+
+	public function agregarExpedienteArea($solicitud){
+		$idExpediente = $solicitud['idExpediente'];
+		$idArea = $solicitud['idArea'];
+		$sql = "INSERT INTO T_EXPEDIENTE_AREA (id_expediente, id_area) VALUES(:idExpediente, :idArea)";
+		try{
+			$config = $this->container->get('db_connect');
+			$response = $config->prepare($sql);
+			$response->bindParam(':idExpediente', $idExpediente);
+			$response->bindParam(':idArea', $idArea);
 			$response->execute();
 			$response = null;
 			$config = null;
@@ -76,6 +75,21 @@ class PersonaMapper{
 		}
 	}
 
+	public function listaArea(){
+		$sql = "SELECT id_area id, descripcion FROM T_AREA";
+		try{
+			$config = $this->container->get('db_connect');
+			$response = $config->query($sql);
+			$config = null;
+			if($response->rowCount() > 0){
+				return $response->fetchAll();
+			}
+			// return null;
+		}catch(PDOException $ex){
+			return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
+		}
+	}
+/*
 	public function modificar($solicitud){
 		$idPersona = $solicitud['idPersona'];
 		$codTipoDocumento = $solicitud['codTipoDocumento'];
@@ -116,5 +130,5 @@ class PersonaMapper{
 		}catch(PDOException $ex){
 			echo '{"text": '.$ex->getMessage().', "status": 0}';
 		}
-	}
+	}*/
 }
