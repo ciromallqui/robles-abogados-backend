@@ -40,5 +40,6 @@ require __DIR__ . '/../services/SesionService.php';
 require __DIR__ . '/../services/PersonaService.php';
 require __DIR__ . '/../services/UsuarioService.php';
 require __DIR__ . '/../services/ExpedienteService.php';
+require __DIR__ . '/../services/DocumentoService.php';
 
 $app->run();

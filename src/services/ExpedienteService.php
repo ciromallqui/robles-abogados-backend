@@ -12,9 +12,11 @@ $container->set('container/expediente/inicializar', function(ContainerInterface 
 		$data['listaArea'] = $consulta->listaArea();
 		if($solicitud['idExpediente'] > 0){
 			$data['expediente'] = $consulta->consultar($solicitud);
+			$data['partesProcesales'] = $consulta->listaParteProcesal($solicitud);
 		}else{
 			$data['expediente']  = null;
 		}
+
 		$response['data'] = $data;
 		return $response;
 	}catch(Exception $ex){
@@ -43,6 +45,14 @@ $container->set('container/expediente/agregar', function(ContainerInterface $con
 		$expediente = new ExpedienteMapper($containerInterface);
 		$solicitud['idExpediente'] = $expediente->agregar($solicitud);
 		$expediente->agregarExpedienteArea($solicitud);
+		// $partesProcesales = array();
+		$partesProcesales = $solicitud['partesProcesales'];
+		foreach ($partesProcesales as $value) {
+			$solicitud['nombreCompleto'] = $value['nombreCompleto'];
+			$solicitud['nroDocumento'] = $value['nroDocumento'];
+			$solicitud['codTipoParte'] = $value['codTipoParte'];
+			$expediente->agregarParteProcesal($solicitud);
+		}
 		return $response;
 	}catch(Exception $ex){
 		return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');

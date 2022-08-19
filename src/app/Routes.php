@@ -33,3 +33,8 @@ $app->group('/api/expediente', function(RouteCollectorProxy $group){
 	$group->post('/inicializar', 'App\controller\ExpedienteController:inicializar');
 	$group->post('/agregar', 'App\controller\ExpedienteController:agregar');
 });
+
+$app->group('/api/documento', function(RouteCollectorProxy $group){
+	$group->post('/agregar', 'App\controller\DocumentoController:agregar');
+	$group->post('/listar', 'App\controller\DocumentoController:listar');
+});
