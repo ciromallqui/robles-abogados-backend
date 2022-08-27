@@ -17,7 +17,7 @@ class ExpedienteMapper{
 		INNER JOIN T_AREA a ON a.id_area = ea.id_area 
 		INNER JOIN T_USUARIO u ON u.id_usuario = e.id_usuario 
 		INNER JOIN T_PERSONA p ON p.id_persona = u.id_persona 
-		WHERE ea.id_area = '$idArea' AND e.nro_expediente LIKE '%$nroExpediente%'";
+		WHERE e.fecha_eliminacion is null AND (ea.id_area = '$idArea' OR ea.id_area = 2) AND e.nro_expediente LIKE '%$nroExpediente%'";
 
 		try{
 			$config = $this->container->get('db_connect');
@@ -84,11 +84,10 @@ class ExpedienteMapper{
 		$anexoCaserio = 	$solicitud['anexoCaserio'];
 		$fecha = 			$solicitud['fecha'];
 		$usuario = 			$solicitud['usuario'];
-		$fechaCreacion = 	$solicitud['fechaCreacion'];
-		$idUsuario = 	$solicitud['idUsuario'];
+		$idUsuario = 		$solicitud['idUsuario'];
 
 		$sql = "INSERT INTO T_EXPEDIENTE (correlativo,anio,extension,nro_expediente,referencia,fecha_inicio,delito_principal,cod_procedencia,cod_motivo,proceso,organo_jurisdiccional,sumilla,ubicacion,parte_procesal,codigo,expediente_origen,juez_ponente,especialista_legal,abogado_responsable,fiscalia,fiscal,comisaria,nro_carpeta,nro_denuncia,ubicacion_fisica,cod_departamento,cod_provincia,cod_distrito,anexo_caserio,fecha,usuario_crea,fecha_creacion,id_usuario) 
-		VALUES(:correlativo, :anio, :extension, :nroExpediente, :referencia, :fechaInicio, :delitoPrincipal, :codProcedencia, :codMotivo, :proceso, :organoJurisdiccional, :sumilla, :ubicacion, :parteProcesal, :codigo, :expedienteOrigen, :juezPonente, :especialistaLegal, :abogadoResponsable, :fiscalia, :fiscal, :comisaria, :nroCarpeta, :nroDenuncia, :ubicacionFisica, :codDepartamento, :codProvincia, :codDistrito, :anexoCaserio, :fecha, :usuario, :fechaCreacion, :idUsuario)";
+		VALUES(:correlativo, :anio, :extension, :nroExpediente, :referencia, :fechaInicio, :delitoPrincipal, :codProcedencia, :codMotivo, :proceso, :organoJurisdiccional, :sumilla, :ubicacion, :parteProcesal, :codigo, :expedienteOrigen, :juezPonente, :especialistaLegal, :abogadoResponsable, :fiscalia, :fiscal, :comisaria, :nroCarpeta, :nroDenuncia, :ubicacionFisica, :codDepartamento, :codProvincia, :codDistrito, :anexoCaserio, :fecha, :usuario, now(), :idUsuario)";
 		try{
 			$config = $this->container->get('db_connect');
 			$response = $config->prepare($sql);
@@ -123,8 +122,94 @@ class ExpedienteMapper{
 			$response->bindParam(':anexoCaserio', $anexoCaserio);
 			$response->bindParam(':fecha', $fecha);
 			$response->bindParam(':usuario', $usuario);
-			$response->bindParam(':fechaCreacion', $fechaCreacion);
 			$response->bindParam(':idUsuario', $idUsuario);
+			$response->execute();
+			$response = null;
+			return $config->lastInsertId();
+		}catch(PDOException $ex){
+			echo '{"text": '.$ex->getMessage().', "status": 0}';
+		}
+	}
+
+	public function modificar($solicitud){
+		$referencia = 		$solicitud['referencia'];
+		$fechaInicio = 		$solicitud['fechaInicio'];
+		$delitoPrincipal = 	$solicitud['delitoPrincipal'];
+		$codProcedencia = 	$solicitud['codProcedencia'];
+		$codMotivo = 		$solicitud['codMotivo'];
+		$proceso = 			$solicitud['proceso'];
+		$organoJurisdiccional = $solicitud['organoJurisdiccional'];
+		$sumilla = 			$solicitud['sumilla'];
+		$ubicacion = 		$solicitud['ubicacion'];
+		$parteProcesal = 	$solicitud['parteProcesal'];
+		$codigo = 			$solicitud['codigo'];
+		$expedienteOrigen = $solicitud['expedienteOrigen'];
+		$juezPonente = 		$solicitud['juezPonente'];
+		$especialistaLegal = $solicitud['especialistaLegal'];
+		$abogadoResponsable = $solicitud['abogadoResponsable'];
+		$fiscalia = 		$solicitud['fiscalia'];
+		$fiscal = 			$solicitud['fiscal'];
+		$comisaria = 		$solicitud['comisaria'];
+		$nroCarpeta = 		$solicitud['nroCarpeta'];
+		$nroDenuncia = 		$solicitud['nroDenuncia'];
+		$ubicacionFisica = 	$solicitud['ubicacionFisica'];
+		$codDepartamento = 	$solicitud['codDepartamento'];
+		$codProvincia = 	$solicitud['codProvincia'];
+		$codDistrito = 		$solicitud['codDistrito'];
+		$anexoCaserio = 	$solicitud['anexoCaserio'];
+		$fecha = 			$solicitud['fecha'];
+		$idExpediente = 	$solicitud['idExpediente'];
+
+		$sql = "UPDATE T_EXPEDIENTE SET referencia = :referencia,fecha_inicio = :fechaInicio,delito_principal = :delitoPrincipal,cod_procedencia = :codProcedencia,cod_motivo = :codMotivo,proceso = :proceso,organo_jurisdiccional = :organoJurisdiccional,sumilla = :sumilla,ubicacion = :ubicacion,parte_procesal = :parteProcesal,codigo = :codigo,expediente_origen = :expedienteOrigen,juez_ponente = :juezPonente,especialista_legal = :especialistaLegal,abogado_responsable = :abogadoResponsable,fiscalia = :fiscalia,fiscal = :fiscal,comisaria = :comisaria,nro_carpeta = :nroCarpeta,nro_denuncia = :nroDenuncia,ubicacion_fisica = :ubicacionFisica,cod_departamento = :codDepartamento,cod_provincia = :codProvincia,cod_distrito = :codDistrito,anexo_caserio = :anexoCaserio,fecha = :fecha
+		WHERE id_expediente = '$idExpediente'";
+		try{
+			$config = $this->container->get('db_connect');
+			$response = $config->prepare($sql);
+			$response->bindParam(':referencia', $referencia);
+			$response->bindParam(':fechaInicio', $fechaInicio);
+			$response->bindParam(':delitoPrincipal', $delitoPrincipal);
+			$response->bindParam(':codProcedencia', $codProcedencia);
+			$response->bindParam(':codMotivo', $codMotivo);
+			$response->bindParam(':proceso', $proceso);
+			$response->bindParam(':organoJurisdiccional', $organoJurisdiccional);
+			$response->bindParam(':sumilla', $sumilla);
+			$response->bindParam(':ubicacion', $ubicacion);
+			$response->bindParam(':parteProcesal', $parteProcesal);
+			$response->bindParam(':codigo', $codigo);
+			$response->bindParam(':expedienteOrigen', $expedienteOrigen);
+			$response->bindParam(':juezPonente', $juezPonente);
+			$response->bindParam(':especialistaLegal', $especialistaLegal);
+			$response->bindParam(':abogadoResponsable', $abogadoResponsable);
+			$response->bindParam(':fiscalia', $fiscalia);
+			$response->bindParam(':fiscal', $fiscal);
+			$response->bindParam(':comisaria', $comisaria);
+			$response->bindParam(':nroCarpeta', $nroCarpeta);
+			$response->bindParam(':nroDenuncia', $nroDenuncia);
+			$response->bindParam(':ubicacionFisica', $ubicacionFisica);
+			$response->bindParam(':codDepartamento', $codDepartamento);
+			$response->bindParam(':codProvincia', $codProvincia);
+			$response->bindParam(':codDistrito', $codDistrito);
+			$response->bindParam(':anexoCaserio', $anexoCaserio);
+			$response->bindParam(':fecha', $fecha);
+			$response->execute();
+			$response = null;
+			return $config->lastInsertId();
+		}catch(PDOException $ex){
+			echo '{"text": '.$ex->getMessage().', "status": 0}';
+		}
+	}
+
+	public function eliminar($solicitud){
+		$idExpediente =		$solicitud['idExpediente'];
+		$usuario = 			$solicitud['usuario'];
+
+		$sql = "UPDATE T_EXPEDIENTE SET usuario_elimina = :usuario, fecha_eliminacion = now()
+		WHERE id_expediente = :idExpediente";
+		try{
+			$config = $this->container->get('db_connect');
+			$response = $config->prepare($sql);
+			$response->bindParam(':idExpediente', $idExpediente);
+			$response->bindParam(':usuario', $usuario);
 			$response->execute();
 			$response = null;
 			return $config->lastInsertId();
@@ -164,6 +249,23 @@ class ExpedienteMapper{
 		$idExpediente = $solicitud['idExpediente'];
 		$idArea = $solicitud['idArea'];
 		$sql = "INSERT INTO T_EXPEDIENTE_AREA (id_expediente, id_area) VALUES(:idExpediente, :idArea)";
+		try{
+			$config = $this->container->get('db_connect');
+			$response = $config->prepare($sql);
+			$response->bindParam(':idExpediente', $idExpediente);
+			$response->bindParam(':idArea', $idArea);
+			$response->execute();
+			$response = null;
+			$config = null;
+		}catch(PDOException $ex){
+			echo '{"text": '.$ex->getMessage().', "status": 0}';
+		}
+	}
+
+	public function actualizarArea($solicitud){
+		$idExpediente = $solicitud['idExpediente'];
+		$idArea = $solicitud['idArea'];
+		$sql = "UPDATE T_EXPEDIENTE_AREA SET id_area = :idArea WHERE id_expediente = :idExpediente";
 		try{
 			$config = $this->container->get('db_connect');
 			$response = $config->prepare($sql);

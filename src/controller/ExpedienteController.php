@@ -36,4 +36,34 @@ class ExpedienteController extends BaseController{
 			echo $ex.getMessage();
 		}
 	}
+
+	public function modificar(Request $request, Response $response, $args){
+		try{
+			$config = $this->container->get('container/expediente/modificar');
+			$response->getBody()->write(json_encode($config));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+		}catch(Exception $ex){
+			echo $ex.getMessage();
+		}
+	}
+
+	public function eliminar(Request $request, Response $response, $args){
+		try{
+			$config = $this->container->get('container/expediente/eliminar');
+			$response->getBody()->write(json_encode($config));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+		}catch(Exception $ex){
+			echo $ex.getMessage();
+		}
+	}
+
+	public function actualizarArea(Request $request, Response $response, $args){
+		try{
+			$config = $this->container->get('container/expediente/actualizarArea');
+			$response->getBody()->write(json_encode($config));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+		}catch(Exception $ex){
+			echo $ex.getMessage();
+		}
+	}
 }

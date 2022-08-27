@@ -45,7 +45,6 @@ $container->set('container/expediente/agregar', function(ContainerInterface $con
 		$expediente = new ExpedienteMapper($containerInterface);
 		$solicitud['idExpediente'] = $expediente->agregar($solicitud);
 		$expediente->agregarExpedienteArea($solicitud);
-		// $partesProcesales = array();
 		$partesProcesales = $solicitud['partesProcesales'];
 		foreach ($partesProcesales as $value) {
 			$solicitud['nombreCompleto'] = $value['nombreCompleto'];
@@ -59,15 +58,41 @@ $container->set('container/expediente/agregar', function(ContainerInterface $con
 	}
 });
 
-// $container->set('container/usuario/modificar', function(ContainerInterface $containerInterface){
-// 	$solicitud = json_decode(file_get_contents('php://input'), true);
-// 	$response['status'] = 1;
-// 	$response['text'] = 'OK';
-// 	try{
-// 		$usuario = new ExpedienteMapper($containerInterface);
-// 		$usuario->modificarUsuarioPerfil($solicitud);
-// 		return $response;
-// 	}catch(Exception $ex){
-// 		return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
-// 	}
-// });
+$container->set('container/expediente/modificar', function(ContainerInterface $containerInterface){
+	$solicitud = json_decode(file_get_contents('php://input'), true);
+	$response['status'] = 1;
+	$response['text'] = 'OK';
+	try{
+		$expediente = new ExpedienteMapper($containerInterface);
+		$expediente->modificar($solicitud);
+		return $response;
+	}catch(Exception $ex){
+		return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
+	}
+});
+
+$container->set('container/expediente/eliminar', function(ContainerInterface $containerInterface){
+	$solicitud = json_decode(file_get_contents('php://input'), true);
+	$response['status'] = 1;
+	$response['text'] = 'OK';
+	try{
+		$expediente = new ExpedienteMapper($containerInterface);
+		$expediente->eliminar($solicitud);
+		return $response;
+	}catch(Exception $ex){
+		return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
+	}
+});
+
+$container->set('container/expediente/actualizarArea', function(ContainerInterface $containerInterface){
+	$solicitud = json_decode(file_get_contents('php://input'), true);
+	$response['status'] = 1;
+	$response['text'] = 'OK';
+	try{
+		$expediente = new ExpedienteMapper($containerInterface);
+		$expediente->actualizarArea($solicitud);
+		return $response;
+	}catch(Exception $ex){
+		return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
+	}
+});

@@ -32,9 +32,16 @@ $app->group('/api/expediente', function(RouteCollectorProxy $group){
 	$group->post('/listar', 'App\controller\ExpedienteController:listar');
 	$group->post('/inicializar', 'App\controller\ExpedienteController:inicializar');
 	$group->post('/agregar', 'App\controller\ExpedienteController:agregar');
+	$group->post('/modificar', 'App\controller\ExpedienteController:modificar');
+	$group->post('/actualizarArea', 'App\controller\ExpedienteController:actualizarArea');
+	$group->post('/eliminar', 'App\controller\ExpedienteController:eliminar');
 });
 
 $app->group('/api/documento', function(RouteCollectorProxy $group){
 	$group->post('/agregar', 'App\controller\DocumentoController:agregar');
 	$group->post('/listar', 'App\controller\DocumentoController:listar');
+});
+
+$app->group('/api/reporte', function(RouteCollectorProxy $group){
+	$group->post('/inicializar', 'App\controller\ReporteController:inicializar');
 });
