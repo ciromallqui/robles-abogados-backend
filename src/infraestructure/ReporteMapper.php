@@ -9,12 +9,12 @@ class ReporteMapper{
 	}
 
 	public function expedientePorArea(){
-		$sql = "SELECT COUNT(e.id_expediente) cantidadExpediente, a.descripcion area, ea.id_expediente, ea.id_area
+		$sql = "SELECT COUNT(e.id_expediente) cantidadExpediente, a.descripcion area 
 		FROM T_EXPEDIENTE e 
 		INNER JOIN T_EXPEDIENTE_AREA ea ON ea.id_expediente = e.id_expediente 
 		INNER JOIN T_AREA a ON a.id_area = ea.id_area
 		WHERE e.fecha_eliminacion is null 
-		GROUP BY a.descripcion,ea.id_expediente,ea.id_area";
+		GROUP BY a.descripcion";
 		try{
 			$config = $this->container->get('db_connect');
 			$response = $config->query($sql);
