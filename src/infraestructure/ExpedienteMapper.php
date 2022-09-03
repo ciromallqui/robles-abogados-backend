@@ -34,7 +34,7 @@ class ExpedienteMapper{
 	public function consultar($solicitud){
 		$idArea = $solicitud['idArea'];
 		$idExpediente = $solicitud['idExpediente'];
-		$sql = "SELECT e.id_expediente idExpediente, e.correlativo correlativo,e.anio,e.extension,e.nro_expediente nroExpediente,e.referencia,date_format(e.fecha_inicio, '%d/%m/%Y') fechaInicio,e.delito_principal delitoPrincipal,e.cod_procedencia codProcedencia,e.cod_motivo codMotivo,e.proceso,e.organo_jurisdiccional organoJurisdiccional,e.sumilla,e.ubicacion,e.parte_procesal parteProcesal,e.codigo,e.expediente_origen expedienteOrigen,e.juez_ponente juezPonente,e.especialista_legal especialistaLegal,e.abogado_responsable abogadoResponsable,e.fiscalia,e.fiscal,e.comisaria,e.nro_carpeta nroCarpeta,e.nro_denuncia nroDenuncia,e.ubicacion_fisica ubicacionFisica,e.cod_departamento codDepartamento,e.cod_provincia codProvincia,e.cod_distrito codDistrito,e.anexo_caserio anexoCaserio,date_format(e.fecha, '%d/%m/%Y') fecha,e.usuario_crea usuarioCrea,date_format(e.fecha_creacion, '%d/%m/%Y') fechaCreacion,u.id_usuario idUsuario, a.id_area idArea, a.descripcion area, p.nro_documento nroDocumento, p.nombre, p.apellido 
+		$sql = "SELECT e.id_expediente idExpediente, e.correlativo correlativo,e.anio,e.extension,e.nro_expediente nroExpediente,e.referencia,date_format(e.fecha_inicio, '%d/%m/%Y') fechaInicio,e.delito_principal delitoPrincipal,e.cod_procedencia codProcedencia,e.cod_motivo codMotivo,e.proceso,e.organo_jurisdiccional organoJurisdiccional,e.sumilla,e.ubicacion,e.parte_procesal parteProcesal,e.codigo,e.expediente_origen expedienteOrigen,e.juez_ponente juezPonente,e.especialista_legal especialistaLegal,e.abogado_responsable abogadoResponsable,e.fiscalia,e.fiscal,e.comisaria,e.nro_carpeta nroCarpeta,e.nro_denuncia nroDenuncia,e.ubicacion_fisica ubicacionFisica,e.cod_departamento codDepartamento,e.cod_provincia codProvincia,e.cod_distrito codDistrito,e.anexo_caserio anexoCaserio,date_format(e.fecha, '%d/%m/%Y') fecha,e.usuario_crea usuarioCrea,date_format(e.fecha_creacion, '%d/%m/%Y') fechaCreacion,u.id_usuario idUsuario, a.id_area idArea, a.descripcion area, p.nro_documento nroDocumento, p.nombre, p.apellido, (select distrito from t_ubigeo where cod_distrito = e.cod_distrito) distrito 
 		FROM T_EXPEDIENTE e 
 		INNER JOIN T_EXPEDIENTE_AREA ea ON ea.id_expediente = e.id_expediente 
 		INNER JOIN T_AREA a ON a.id_area = ea.id_area 
@@ -281,7 +281,7 @@ class ExpedienteMapper{
 
 	public function listaParteProcesal($solicitud){
 		$idExpediente = $solicitud['idExpediente'];
-		$sql = "SELECT pp.id_parte_procesal idParteProcesal,pp.nombre_completo nombreCompleto,pp.nro_documento nroDocumento,e.id_expediente idExpediente,'' tipoParte 
+		$sql = "SELECT pp.id_parte_procesal idParteProcesal,pp.nombre_completo nombreCompleto,pp.nro_documento nroDocumento,e.id_expediente idExpediente,pp.cod_tipo_parte codTipoParte 
 		FROM T_PARTE_PROCESAL pp INNER JOIN T_EXPEDIENTE e ON e.id_expediente = pp.id_expediente 
 		WHERE e.id_expediente = '$idExpediente'";
 		try{
@@ -310,46 +310,4 @@ class ExpedienteMapper{
 			return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
 		}
 	}
-/*
-	public function modificar($solicitud){
-		$idPersona = $solicitud['idPersona'];
-		$codTipoDocumento = $solicitud['codTipoDocumento'];
-		$nroDocumento = $solicitud['nroDocumento'];
-		$nombre = $solicitud['nombre'];
-		$apellido = $solicitud['apellido'];
-		$correo = $solicitud['correo'];
-		$nroCelular = $solicitud['nroCelular'];
-		$sql = "UPDATE T_PERSONA SET cod_tipo_documento = :codTipoDocumento, nro_documento = :nroDocumento, nombre = :nombre, apellido = :apellido, correo = :correo, nro_celular = :nroCelular WHERE id_persona = :idPersona";
-		try{
-			$config = $this->container->get('db_connect');
-			$response = $config->prepare($sql);
-			$response->bindParam(':idPersona', $idPersona);
-			$response->bindParam(':codTipoDocumento', $codTipoDocumento);
-			$response->bindParam(':nroDocumento', $nroDocumento);
-			$response->bindParam(':nombre', $nombre);
-			$response->bindParam(':apellido', $apellido);
-			$response->bindParam(':correo', $correo);
-			$response->bindParam(':nroCelular', $nroCelular);
-			$response->execute();
-			$response = null;
-			$config = null;
-		}catch(PDOException $ex){
-			echo '{"text": '.$ex->getMessage().', "status": 0}';
-		}
-	}
-
-	public function eliminar($solicitud){
-		$idPersona = $solicitud['idPersona'];
-		$sql = "DELETE FROM T_PERSONA WHERE id_persona = :idPersona";
-		try{
-			$config = $this->container->get('db_connect');
-			$response = $config->prepare($sql);
-			$response->bindParam(':idPersona', $idPersona);
-			$response->execute();
-			$response = null;
-			$config = null;
-		}catch(PDOException $ex){
-			echo '{"text": '.$ex->getMessage().', "status": 0}';
-		}
-	}*/
 }

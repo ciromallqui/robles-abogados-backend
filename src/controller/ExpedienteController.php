@@ -66,4 +66,24 @@ class ExpedienteController extends BaseController{
 			echo $ex.getMessage();
 		}
 	}
+
+	public function listarProvincia(Request $request, Response $response, $args){
+		try{
+			$config = $this->container->get('container/expediente/listarProvincia');
+			$response->getBody()->write(json_encode($config));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+		}catch(Exception $ex){
+			echo $ex.getMessage();
+		}
+	}
+
+	public function listarDistrito(Request $request, Response $response, $args){
+		try{
+			$config = $this->container->get('container/expediente/listarDistrito');
+			$response->getBody()->write(json_encode($config));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+		}catch(Exception $ex){
+			echo $ex.getMessage();
+		}
+	}
 }

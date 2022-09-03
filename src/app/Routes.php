@@ -35,6 +35,8 @@ $app->group('/api/expediente', function(RouteCollectorProxy $group){
 	$group->post('/modificar', 'App\controller\ExpedienteController:modificar');
 	$group->post('/actualizarArea', 'App\controller\ExpedienteController:actualizarArea');
 	$group->post('/eliminar', 'App\controller\ExpedienteController:eliminar');
+	$group->post('/listarProvincia', 'App\controller\ExpedienteController:listarProvincia');
+	$group->post('/listarDistrito', 'App\controller\ExpedienteController:listarDistrito');
 });
 
 $app->group('/api/documento', function(RouteCollectorProxy $group){
@@ -44,4 +46,5 @@ $app->group('/api/documento', function(RouteCollectorProxy $group){
 
 $app->group('/api/reporte', function(RouteCollectorProxy $group){
 	$group->post('/inicializar', 'App\controller\ReporteController:inicializar');
+	$group->post('/expediente', 'App\controller\ReporteController:expediente');
 });
