@@ -45,10 +45,11 @@ class DocumentoMapper{
 
 	public function listar($solicitud){
 		$idExpediente = $solicitud['idExpediente'];
+		$busqueda = 	$solicitud['busqueda'];
 		$sql = "SELECT d.id_documento idDocumento,d.asunto,d.descripcion,d.nombre,d.archivo,d.cod_tipo codTipo,d.nro_documento nroDocumento,d.folio,e.id_expediente idExpediente,date_format(d.fecha_creacion, '%d/%m/%Y') fechaCreacion, (select concat(apellido,' ',nombre) from t_persona where nro_documento = d.usuario_crea) usuarioCrea
 		FROM T_DOCUMENTO d 
 		INNER JOIN T_EXPEDIENTE e  ON e.id_expediente = d.id_expediente 
-		WHERE e.id_expediente = '$idExpediente'";
+		WHERE e.id_expediente = '$idExpediente' AND (d.asunto like '%$busqueda%' OR d.nombre like '%$busqueda%' OR d.nro_documento like '%$busqueda%')";
 
 		try{
 			$config = $this->container->get('db_connect');

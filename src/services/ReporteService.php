@@ -15,6 +15,9 @@ $container->set('container/reporte/inicializar', function(ContainerInterface $co
 		$data['expedientes'] = $consulta->expedienteAll();
 		$data['usuarios'] = $consulta->usuarioAll();
 		$data['personas'] = $consulta->personaAll();
+		$data['documentoBuscado'] = $consulta->documentoBuscado();
+		$data['documentoEncontrado'] = $consulta->documentoEncontrado();
+
 		$response['data'] = $data;
 		return $response;
 	}catch(Exception $ex){

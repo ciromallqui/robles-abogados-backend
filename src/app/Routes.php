@@ -48,3 +48,7 @@ $app->group('/api/reporte', function(RouteCollectorProxy $group){
 	$group->post('/inicializar', 'App\controller\ReporteController:inicializar');
 	$group->post('/expediente', 'App\controller\ReporteController:expediente');
 });
+
+$app->group('/api/auditoria', function(RouteCollectorProxy $group){
+	$group->post('/agregar', 'App\controller\AuditoriaController:agregar');
+});

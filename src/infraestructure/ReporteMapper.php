@@ -70,4 +70,32 @@ class ReporteMapper{
 			return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
 		}
 	}
+
+	public function documentoBuscado(){
+		$sql = "SELECT COUNT(id_auditoria) cantidad FROM T_AUDITORIA WHERE accion = 'BUSCAR_DOCUMENTO'";
+		try{
+			$config = $this->container->get('db_connect');
+			$response = $config->query($sql);
+			$config = null;
+			if($response->rowCount() > 0){
+				return $response->fetch();
+			}
+		}catch(PDOException $ex){
+			return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
+		}
+	}
+
+	public function documentoEncontrado(){
+		$sql = "SELECT COUNT(id_auditoria) cantidad, max(date_format(fecha_creacion, '%d/%m/%Y')) fechaBusqueda FROM T_AUDITORIA WHERE accion = 'BUSCAR_DOCUMENTO' AND id_documento > 0";
+		try{
+			$config = $this->container->get('db_connect');
+			$response = $config->query($sql);
+			$config = null;
+			if($response->rowCount() > 0){
+				return $response->fetch();
+			}
+		}catch(PDOException $ex){
+			return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
+		}
+	}
 }
