@@ -10,14 +10,15 @@ class ExpedienteMapper{
 
 	public function listar($solicitud){
 		$idArea = $solicitud['idArea'];
+		$codEstado = $solicitud['codEstado'];
 		$nroExpediente = $solicitud['nroExpediente'];
-		$sql = "SELECT e.id_expediente idExpediente, e.correlativo correlativo,e.anio,e.extension,e.nro_expediente nroExpediente,e.referencia,date_format(e.fecha_inicio, '%d/%m/%Y') fechaInicio,e.delito_principal delitoPrincipal,e.cod_procedencia codProcedencia,e.cod_motivo codMotivo,e.proceso,e.organo_jurisdiccional organoJurisdiccional,e.sumilla,e.ubicacion,e.parte_procesal parteProcesal,e.codigo,e.expediente_origen expedienteOrigen,e.juez_ponente juezPonente,e.especialista_legal especialistaLegal,e.abogado_responsable abogadoResponsable,e.fiscalia,e.fiscal,e.comisaria,e.nro_carpeta nroCarpeta,e.nro_denuncia nroDenuncia,e.ubicacion_fisica ubicacionFisica,e.cod_departamento codDepartamento,e.cod_provincia codProvincia,e.cod_distrito codDistrito,e.anexo_caserio anexoCaserio,date_format(e.fecha, '%d/%m/%Y') fecha,e.usuario_crea usuarioCrea,date_format(e.fecha_creacion, '%d/%m/%Y') fechaCreacion,u.id_usuario idUsuario, a.id_area idArea, a.descripcion area, p.nro_documento nroDocumento, concat(p.nombre,' ',p.apellido) nombreCompleto, TIMESTAMPDIFF(DAY, e.fecha_inicio, now()) dias 
+		$sql = "SELECT e.id_expediente idExpediente, e.correlativo correlativo,e.anio,e.extension,e.nro_expediente nroExpediente,e.referencia,date_format(e.fecha_inicio, '%d/%m/%Y') fechaInicio,e.delito_principal delitoPrincipal,e.cod_procedencia codProcedencia,e.cod_motivo codMotivo,e.proceso,e.organo_jurisdiccional organoJurisdiccional,e.sumilla,e.ubicacion,e.parte_procesal parteProcesal,e.codigo,e.expediente_origen expedienteOrigen,e.juez_ponente juezPonente,e.especialista_legal especialistaLegal,e.abogado_responsable abogadoResponsable,e.fiscalia,e.fiscal,e.comisaria,e.nro_carpeta nroCarpeta,e.nro_denuncia nroDenuncia,e.ubicacion_fisica ubicacionFisica,e.cod_departamento codDepartamento,e.cod_provincia codProvincia,e.cod_distrito codDistrito,e.anexo_caserio anexoCaserio,date_format(e.fecha, '%d/%m/%Y') fecha,e.usuario_crea usuarioCrea,date_format(e.fecha_creacion, '%d/%m/%Y') fechaCreacion,u.id_usuario idUsuario, a.id_area idArea, a.descripcion area, p.nro_documento nroDocumento, concat(p.nombre,' ',p.apellido) nombreCompleto, TIMESTAMPDIFF(DAY, e.fecha_inicio, now()) dias, e.cod_estado codEstado
 		FROM T_EXPEDIENTE e 
 		INNER JOIN T_EXPEDIENTE_AREA ea ON ea.id_expediente = e.id_expediente 
 		INNER JOIN T_AREA a ON a.id_area = ea.id_area 
 		INNER JOIN T_USUARIO u ON u.id_usuario = e.id_usuario 
 		INNER JOIN T_PERSONA p ON p.id_persona = u.id_persona 
-		WHERE e.fecha_eliminacion is null AND (ea.id_area = '$idArea' OR ea.id_area = 2) AND e.nro_expediente LIKE '%$nroExpediente%'";
+		WHERE e.fecha_eliminacion is null AND (ea.id_area = '$idArea' OR ea.id_area = 2) AND e.nro_expediente LIKE '%$nroExpediente%' AND e.cod_estado LIKE '%$codEstado%'";
 
 		try{
 			$config = $this->container->get('db_connect');
@@ -34,13 +35,13 @@ class ExpedienteMapper{
 	public function consultar($solicitud){
 		$idArea = $solicitud['idArea'];
 		$idExpediente = $solicitud['idExpediente'];
-		$sql = "SELECT e.id_expediente idExpediente, e.correlativo correlativo,e.anio,e.extension,e.nro_expediente nroExpediente,e.referencia,date_format(e.fecha_inicio, '%d/%m/%Y') fechaInicio,e.delito_principal delitoPrincipal,e.cod_procedencia codProcedencia,e.cod_motivo codMotivo,e.proceso,e.organo_jurisdiccional organoJurisdiccional,e.sumilla,e.ubicacion,e.parte_procesal parteProcesal,e.codigo,e.expediente_origen expedienteOrigen,e.juez_ponente juezPonente,e.especialista_legal especialistaLegal,e.abogado_responsable abogadoResponsable,e.fiscalia,e.fiscal,e.comisaria,e.nro_carpeta nroCarpeta,e.nro_denuncia nroDenuncia,e.ubicacion_fisica ubicacionFisica,e.cod_departamento codDepartamento,e.cod_provincia codProvincia,e.cod_distrito codDistrito,e.anexo_caserio anexoCaserio,date_format(e.fecha, '%d/%m/%Y') fecha,e.usuario_crea usuarioCrea,date_format(e.fecha_creacion, '%d/%m/%Y') fechaCreacion,u.id_usuario idUsuario, a.id_area idArea, a.descripcion area, p.nro_documento nroDocumento, p.nombre, p.apellido, (select distrito from t_ubigeo where cod_distrito = e.cod_distrito) distrito 
+		$sql = "SELECT e.id_expediente idExpediente, e.correlativo correlativo,e.anio,e.extension,e.nro_expediente nroExpediente,e.referencia,date_format(e.fecha_inicio, '%d/%m/%Y') fechaInicio,e.delito_principal delitoPrincipal,e.cod_procedencia codProcedencia,e.cod_motivo codMotivo,e.proceso,e.organo_jurisdiccional organoJurisdiccional,e.sumilla,e.ubicacion,e.parte_procesal parteProcesal,e.codigo,e.expediente_origen expedienteOrigen,e.juez_ponente juezPonente,e.especialista_legal especialistaLegal,e.abogado_responsable abogadoResponsable,e.fiscalia,e.fiscal,e.comisaria,e.nro_carpeta nroCarpeta,e.nro_denuncia nroDenuncia,e.ubicacion_fisica ubicacionFisica,e.cod_departamento codDepartamento,e.cod_provincia codProvincia,e.cod_distrito codDistrito,e.anexo_caserio anexoCaserio,date_format(e.fecha, '%d/%m/%Y') fecha,e.usuario_crea usuarioCrea,date_format(e.fecha_creacion, '%d/%m/%Y') fechaCreacion,u.id_usuario idUsuario, a.id_area idArea, a.descripcion area, p.nro_documento nroDocumento, p.nombre, p.apellido, (select distrito from t_ubigeo where cod_distrito = e.cod_distrito) distrito, e.cod_estado codEstado 
 		FROM T_EXPEDIENTE e 
 		INNER JOIN T_EXPEDIENTE_AREA ea ON ea.id_expediente = e.id_expediente 
 		INNER JOIN T_AREA a ON a.id_area = ea.id_area 
 		INNER JOIN T_USUARIO u ON u.id_usuario = e.id_usuario 
 		INNER JOIN T_PERSONA p ON p.id_persona = u.id_persona 
-		WHERE ea.id_area = '$idArea' AND ea.id_expediente = '$idExpediente'";
+		WHERE ea.id_expediente = '$idExpediente'";
 
 		try{
 			$config = $this->container->get('db_connect');
@@ -271,6 +272,23 @@ class ExpedienteMapper{
 			$response = $config->prepare($sql);
 			$response->bindParam(':idExpediente', $idExpediente);
 			$response->bindParam(':idArea', $idArea);
+			$response->execute();
+			$response = null;
+			$config = null;
+		}catch(PDOException $ex){
+			echo '{"text": '.$ex->getMessage().', "status": 0}';
+		}
+	}
+
+	public function actualizarEstado($solicitud){
+		$idExpediente = $solicitud['idExpediente'];
+		$codEstado = $solicitud['codEstado'];
+		$sql = "UPDATE T_EXPEDIENTE SET cod_estado = :codEstado WHERE id_expediente = :idExpediente";
+		try{
+			$config = $this->container->get('db_connect');
+			$response = $config->prepare($sql);
+			$response->bindParam(':idExpediente', $idExpediente);
+			$response->bindParam(':codEstado', $codEstado);
 			$response->execute();
 			$response = null;
 			$config = null;

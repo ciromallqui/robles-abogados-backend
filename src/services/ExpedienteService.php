@@ -101,6 +101,21 @@ $container->set('container/expediente/actualizarArea', function(ContainerInterfa
 	try{
 		$expediente = new ExpedienteMapper($containerInterface);
 		$expediente->actualizarArea($solicitud);
+		$solicitud['codEstado'] = '2';
+		$expediente->actualizarEstado($solicitud);
+		return $response;
+	}catch(Exception $ex){
+		return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
+	}
+});
+
+$container->set('container/expediente/actualizarEstado', function(ContainerInterface $containerInterface){
+	$solicitud = json_decode(file_get_contents('php://input'), true);
+	$response['status'] = 1;
+	$response['text'] = 'OK';
+	try{
+		$expediente = new ExpedienteMapper($containerInterface);
+		$expediente->actualizarEstado($solicitud);
 		return $response;
 	}catch(Exception $ex){
 		return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');

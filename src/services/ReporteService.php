@@ -15,8 +15,10 @@ $container->set('container/reporte/inicializar', function(ContainerInterface $co
 		$data['expedientes'] = $consulta->expedienteAll();
 		$data['usuarios'] = $consulta->usuarioAll();
 		$data['personas'] = $consulta->personaAll();
-		$data['documentoBuscado'] = $consulta->documentoBuscado();
-		$data['documentoEncontrado'] = $consulta->documentoEncontrado();
+		$data['documentoBuscado'] = $consulta->documentoBuscado($solicitud);
+		$data['documentoEncontrado'] = $consulta->documentoEncontrado($solicitud);
+		$data['expedienteDerivado'] = $consulta->expedienteDerivado($solicitud);
+		$data['expedienteAtendido'] = $consulta->expedienteAtendido($solicitud);
 
 		$response['data'] = $data;
 		return $response;

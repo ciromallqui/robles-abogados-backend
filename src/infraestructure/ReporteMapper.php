@@ -71,8 +71,10 @@ class ReporteMapper{
 		}
 	}
 
-	public function documentoBuscado(){
-		$sql = "SELECT COUNT(id_auditoria) cantidad FROM T_AUDITORIA WHERE accion = 'BUSCAR_DOCUMENTO'";
+	//Primer indicador
+	public function expedienteDerivado($solicitud){
+		$fecha = $solicitud['fecha'];
+		$sql = "SELECT COUNT(id_auditoria) cantidad, max(date_format('$fecha', '%d/%m/%Y')) fechaBusqueda FROM T_AUDITORIA WHERE accion = 'DERIVAR_EXPEDIENTE' AND fecha_creacion = '$fecha'";
 		try{
 			$config = $this->container->get('db_connect');
 			$response = $config->query($sql);
@@ -85,8 +87,40 @@ class ReporteMapper{
 		}
 	}
 
-	public function documentoEncontrado(){
-		$sql = "SELECT COUNT(id_auditoria) cantidad, max(date_format(fecha_creacion, '%d/%m/%Y')) fechaBusqueda FROM T_AUDITORIA WHERE accion = 'BUSCAR_DOCUMENTO' AND id_documento > 0";
+	public function expedienteAtendido($solicitud){
+		$fecha = $solicitud['fecha'];
+		$sql = "SELECT COUNT(id_auditoria) cantidad FROM T_AUDITORIA WHERE accion = 'DERIVAR_EXPEDIENTE' AND fecha_creacion = '$fecha' AND fecha_modificacion = '$fecha'";
+		try{
+			$config = $this->container->get('db_connect');
+			$response = $config->query($sql);
+			$config = null;
+			if($response->rowCount() > 0){
+				return $response->fetch();
+			}
+		}catch(PDOException $ex){
+			return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
+		}
+	}
+
+	//Segundo indicador
+	public function documentoBuscado($solicitud){
+		$fecha = $solicitud['fecha'];
+		$sql = "SELECT COUNT(id_auditoria) cantidad FROM T_AUDITORIA WHERE accion = 'BUSCAR_DOCUMENTO' AND fecha_creacion = '$fecha'";
+		try{
+			$config = $this->container->get('db_connect');
+			$response = $config->query($sql);
+			$config = null;
+			if($response->rowCount() > 0){
+				return $response->fetch();
+			}
+		}catch(PDOException $ex){
+			return json_decode('{"text": '.$ex->getMessage().', "status": "0"}');
+		}
+	}
+
+	public function documentoEncontrado($solicitud){
+		$fecha = $solicitud['fecha'];
+		$sql = "SELECT COUNT(id_auditoria) cantidad, max(date_format('$fecha', '%d/%m/%Y')) fechaBusqueda FROM T_AUDITORIA WHERE accion = 'BUSCAR_DOCUMENTO' AND id_documento > 0 AND fecha_creacion = '$fecha'";
 		try{
 			$config = $this->container->get('db_connect');
 			$response = $config->query($sql);

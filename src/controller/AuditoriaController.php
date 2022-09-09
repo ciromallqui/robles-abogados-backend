@@ -16,4 +16,14 @@ class AuditoriaController extends BaseController{
 			echo $ex.getMessage();
 		}
 	}
+
+	public function modificar(Request $request, Response $response, $args){
+		try{
+			$config = $this->container->get('container/auditoria/modificar');
+			$response->getBody()->write(json_encode($config));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+		}catch(Exception $ex){
+			echo $ex.getMessage();
+		}
+	}
 }
