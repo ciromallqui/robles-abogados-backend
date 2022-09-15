@@ -1,4 +1,4 @@
-<?php
+<?php namespace App\services;
 use App\services\JwtTokenSecurity;
 use Psr\Container\ContainerInterface;
 use App\infraestructure\DocumentoMapper;

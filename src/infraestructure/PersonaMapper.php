@@ -40,7 +40,7 @@ class PersonaMapper{
 
 	public function buscarPorDocumento($solicitud){
 		$nroDocumento = $solicitud['nroDocumento'];
-		$sql = "SELECT p.id_persona idPersona, p.cod_tipo_documento codTipoDocumento, p.nro_documento nroDocumento, p.nombre, p.apellido, p.correo, p.nro_celular nroCelular, u.id_usuario idUsuario, u.codigo_usuario codUsuario FROM T_PERSONA p INNER JOIN T_USUARIO u ON u.id_persona = p.id_persona WHERE nro_documento = '$nroDocumento'";
+		$sql = "SELECT p.id_persona idPersona, p.cod_tipo_documento codTipoDocumento, p.nro_documento nroDocumento, p.nombre, p.apellido, p.correo, p.nro_celular nroCelular, u.id_usuario idUsuario, u.codigo_usuario codUsuario FROM T_PERSONA p LEFT JOIN T_USUARIO u ON u.id_persona = p.id_persona WHERE nro_documento = '$nroDocumento'";
 		try{
 			$config = $this->container->get('db_connect');
 			$response = $config->query($sql);

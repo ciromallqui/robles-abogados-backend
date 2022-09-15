@@ -1,4 +1,4 @@
-<?php
+<?php namespace App\services;
 use Psr\Container\ContainerInterface;
 use App\services\JwtTokenSecurity;
 use App\infraestructure\SesionMapper;

@@ -58,7 +58,7 @@ class ReporteMapper{
 	}
 
 	public function personaAll(){
-		$sql = "SELECT COUNT(id_persona) cantidad FROM T_PERSONA";
+		$sql = "SELECT COUNT(u.id_usuario) cantidad FROM T_USUARIO u INNER JOIN T_USUARIO_PERFIL up ON up.id_usuario = u.id_usuario WHERE id_perfil = 3";
 		try{
 			$config = $this->container->get('db_connect');
 			$response = $config->query($sql);

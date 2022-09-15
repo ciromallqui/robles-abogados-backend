@@ -35,7 +35,7 @@ class ExpedienteMapper{
 	public function consultar($solicitud){
 		$idArea = $solicitud['idArea'];
 		$idExpediente = $solicitud['idExpediente'];
-		$sql = "SELECT e.id_expediente idExpediente, e.correlativo correlativo,e.anio,e.extension,e.nro_expediente nroExpediente,e.referencia,date_format(e.fecha_inicio, '%d/%m/%Y') fechaInicio,e.delito_principal delitoPrincipal,e.cod_procedencia codProcedencia,e.cod_motivo codMotivo,e.proceso,e.organo_jurisdiccional organoJurisdiccional,e.sumilla,e.ubicacion,e.parte_procesal parteProcesal,e.codigo,e.expediente_origen expedienteOrigen,e.juez_ponente juezPonente,e.especialista_legal especialistaLegal,e.abogado_responsable abogadoResponsable,e.fiscalia,e.fiscal,e.comisaria,e.nro_carpeta nroCarpeta,e.nro_denuncia nroDenuncia,e.ubicacion_fisica ubicacionFisica,e.cod_departamento codDepartamento,e.cod_provincia codProvincia,e.cod_distrito codDistrito,e.anexo_caserio anexoCaserio,date_format(e.fecha, '%d/%m/%Y') fecha,e.usuario_crea usuarioCrea,date_format(e.fecha_creacion, '%d/%m/%Y') fechaCreacion,u.id_usuario idUsuario, a.id_area idArea, a.descripcion area, p.nro_documento nroDocumento, p.nombre, p.apellido, (select distrito from t_ubigeo where cod_distrito = e.cod_distrito) distrito, e.cod_estado codEstado 
+		$sql = "SELECT e.id_expediente idExpediente, e.correlativo correlativo,e.anio,e.extension,e.nro_expediente nroExpediente,e.referencia,date_format(e.fecha_inicio, '%d/%m/%Y') fechaInicio,e.delito_principal delitoPrincipal,e.cod_procedencia codProcedencia,e.cod_motivo codMotivo,e.proceso,e.organo_jurisdiccional organoJurisdiccional,e.sumilla,e.ubicacion,e.parte_procesal parteProcesal,e.codigo,e.expediente_origen expedienteOrigen,e.juez_ponente juezPonente,e.especialista_legal especialistaLegal,e.abogado_responsable abogadoResponsable,e.fiscalia,e.fiscal,e.comisaria,e.nro_carpeta nroCarpeta,e.nro_denuncia nroDenuncia,e.ubicacion_fisica ubicacionFisica,e.cod_departamento codDepartamento,e.cod_provincia codProvincia,e.cod_distrito codDistrito,e.anexo_caserio anexoCaserio,date_format(e.fecha, '%d/%m/%Y') fecha,e.usuario_crea usuarioCrea,date_format(e.fecha_creacion, '%d/%m/%Y') fechaCreacion,u.id_usuario idUsuario, a.id_area idArea, a.descripcion area, p.nro_documento nroDocumento, p.nombre, p.apellido, (select distrito from T_UBIGEO where cod_distrito = e.cod_distrito) distrito, e.cod_estado codEstado 
 		FROM T_EXPEDIENTE e 
 		INNER JOIN T_EXPEDIENTE_AREA ea ON ea.id_expediente = e.id_expediente 
 		INNER JOIN T_AREA a ON a.id_area = ea.id_area 
@@ -59,7 +59,7 @@ class ExpedienteMapper{
 		$extension = 		$solicitud['extension'];
 		$nroExpediente = 	$solicitud['nroExpediente'];
 		$referencia = 		$solicitud['referencia'];
-		$fechaInicio = 		$solicitud['fechaInicio'];
+		$fechaInicio = 		date("Y-m-d", strtotime($solicitud['fechaInicio']));
 		$delitoPrincipal = 	$solicitud['delitoPrincipal'];
 		$codProcedencia = 	$solicitud['codProcedencia'];
 		$codMotivo = 		$solicitud['codMotivo'];
@@ -83,7 +83,7 @@ class ExpedienteMapper{
 		$codProvincia = 	$solicitud['codProvincia'];
 		$codDistrito = 		$solicitud['codDistrito'];
 		$anexoCaserio = 	$solicitud['anexoCaserio'];
-		$fecha = 			$solicitud['fecha'];
+		$fecha = 			date("Y-m-d", strtotime($solicitud['fecha']));
 		$usuario = 			$solicitud['usuario'];
 		$idUsuario = 		$solicitud['idUsuario'];
 
@@ -224,11 +224,10 @@ class ExpedienteMapper{
 		$nroDocumento = 	$solicitud['nroDocumento'];
 		$codTipoParte = 	$solicitud['codTipoParte'];
 		$usuario = 			$solicitud['usuario'];
-		$fechaCreacion = 	$solicitud['fechaCreacion'];
 		$idExpediente =   	$solicitud['idExpediente'];
 
 		$sql = "INSERT INTO T_PARTE_PROCESAL (nombre_completo,nro_documento,cod_tipo_parte,id_expediente,usuario_crea,fecha_creacion) 
-		VALUES(:nombreCompleto, :nroDocumento, :codTipoParte, :idExpediente, :usuario, :fechaCreacion)";
+		VALUES(:nombreCompleto, :nroDocumento, :codTipoParte, :idExpediente, :usuario, NOW())";
 		try{
 			$config = $this->container->get('db_connect');
 			$response = $config->prepare($sql);
@@ -237,7 +236,6 @@ class ExpedienteMapper{
 			$response->bindParam(':codTipoParte', $codTipoParte);
 			$response->bindParam(':idExpediente', $idExpediente);
 			$response->bindParam(':usuario', $usuario);
-			$response->bindParam(':fechaCreacion', $fechaCreacion);
 			$response->execute();
 			$response = null;
 			$config = null;
